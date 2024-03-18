@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: IHSetYates09
-Version: 1.0.1
+Version: 1.0.2
 Summary: IH-SET Yates et al. (2009)
 Home-page: https://github.com/defreitasL/IHSetYates09
 Author: Lucas de Freitas Pereira
@@ -19,4 +19,4 @@ Requires-Dist: xarray
 Requires-Dist: numba
 Requires-Dist: datetime
 Requires-Dist: spotpy
-Requires-Dist: IHSetCalibration@ git+https://github.com/defreitasL/IHSetYates09.git
+Requires-Dist: IHSetCalibration@ git+https://github.com/defreitasL/IHSetCalibration.git
