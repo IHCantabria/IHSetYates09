@@ -75,8 +75,7 @@ class cal_Yates09(object):
                                  b,
                                  cacr,
                                  cero,
-                                 self.Yini,
-                                 self.vlt)
+                                 self.Yini)
                 return Ymd[self.idx_obs_splited]
             
             self.params = [
@@ -101,8 +100,7 @@ class cal_Yates09(object):
                                  b,
                                  cacr,
                                  cero,
-                                 Yini,
-                                 self.vlt)
+                                 Yini)
             
                 return Ymd[self.idx_obs_splited]
             self.params = [
