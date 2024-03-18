@@ -1,0 +1,6 @@
+numpy
+xarray
+numba
+datetime
+spotpy
+IHSetCalibration@ git+https://github.com/defreitasL/IHSetYates09.git
