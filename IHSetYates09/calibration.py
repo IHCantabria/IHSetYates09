@@ -45,7 +45,7 @@ class cal_Yates09(object):
         self.time = mkTime(wav['Y'].values, wav['M'].values, wav['D'].values, wav['h'].values)
         self.E = self.Hs ** 2
 
-        self.Y_obs = ens['Obs'].values
+        self.Obs = ens['Obs'].values
         self.time_obs = mkTime(ens['Y'].values, ens['M'].values, ens['D'].values, ens['h'].values)
 
         self.start_date = datetime(int(cfg['Ysi'].values), int(cfg['Msi'].values), int(cfg['Dsi'].values))
@@ -54,7 +54,7 @@ class cal_Yates09(object):
         self.split_data()
 
         if self.switch_Yini == 0:
-            self.Yini = self.Y_obs_splited[0]
+            self.Yini = self.Obs_splited[0]
 
         cfg.close()
         wav.close()
@@ -108,7 +108,7 @@ class cal_Yates09(object):
                 Uniform('b', 1e-1, 1e+3),
                 Uniform('cacr', 1e-5, 6e-1),
                 Uniform('cero', 1e-5, 6e-1),
-                Uniform('Yini', np.min(self.Y_obs), np.max(self.Y_obs))
+                Uniform('Yini', np.min(self.Obs), np.max(self.Obs))
             ]
             self.model_sim = model_simulation
 
@@ -118,8 +118,6 @@ class cal_Yates09(object):
         """
         idx = np.where((self.time < self.start_date) & (self.time > self.end_date))
         self.idx_validation = idx
-        mkIdx = np.vectorize(lambda t: np.argmin(np.abs(self.time[self.idx_validation] - t)))
-        self.idx_validation_obs = mkIdx(self.time_obs)
 
         idx = np.where((self.time >= self.start_date) & (self.time <= self.end_date))
         self.idx_calibration = idx
@@ -127,12 +125,17 @@ class cal_Yates09(object):
         self.time_splited = self.time[idx]
 
         idx = np.where((self.time_obs >= self.start_date) & (self.time_obs <= self.end_date))
-        self.Y_obs_splited = self.Y_obs[idx]
+        self.Obs_splited = self.Obs[idx]
         self.time_obs_splited = self.time_obs[idx]
 
         mkIdx = np.vectorize(lambda t: np.argmin(np.abs(self.time_splited - t)))
         self.idx_obs_splited = mkIdx(self.time_obs_splited)
-        self.observations = self.Y_obs_splited
+        self.observations = self.Obs_splited
+
+        # Validation    
+        idx = np.where((self.time_obs < self.start_date) | (self.time_obs > self.end_date))
+        mkIdx = np.vectorize(lambda t: np.argmin(np.abs(self.time[self.idx_validation] - t)))
+        self.idx_validation_obs = mkIdx(self.time_obs[idx])
 
 
         
