@@ -116,7 +116,13 @@ class cal_Yates09(object):
         """
         Split the data into calibration and validation datasets.
         """
+        idx = np.where((self.time < self.start_date) & (self.time > self.end_date))
+        self.idx_validation = idx
+        mkIdx = np.vectorize(lambda t: np.argmin(np.abs(self.time[self.idx_validation] - t)))
+        self.idx_validation_obs = mkIdx(self.time_obs)
+
         idx = np.where((self.time >= self.start_date) & (self.time <= self.end_date))
+        self.idx_calibration = idx
         self.E_splited = self.E[idx]
         self.time_splited = self.time[idx]
 
