@@ -138,7 +138,7 @@ class cal_Yates09(object):
 
         # Validation
         idx = np.where((self.time_obs < self.start_date) | (self.time_obs > self.end_date))[0]
-        self.idx_validation_obs = idx[0]
+        self.idx_validation_obs = idx
         if len(self.idx_validation)>0:
             mkIdx = np.vectorize(lambda t: np.argmin(np.abs(self.time[self.idx_validation] - t)))
             if len(self.idx_validation_obs)>0:
