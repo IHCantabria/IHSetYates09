@@ -108,7 +108,7 @@ class cal_Yates09(object):
                 Uniform('b', 1e-1, 1e+3),
                 Uniform('cacr', 1e-5, 6e-1),
                 Uniform('cero', 1e-5, 6e-1),
-                Uniform('Yini', np.min(self.Obs), np.max(self.Obs))
+                Uniform('Yini', 0.5*np.min(self.Obs), 1.5*np.max(self.Obs))
             ]
             self.model_sim = model_simulation
 
