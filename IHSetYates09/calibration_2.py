@@ -181,11 +181,11 @@ class cal_Yates09_2(object):
         Calibrate the model.
         """
         if self.cal_alg == 'NSGAII':
-            self.population, self.objectives = fo.nsgaii_algorithm(self.objective_function, self.model_simulation, self.Obs_splited, self.initialize_population, self.num_generations, self.population_size, self.cross_prob, self.mutation_rate, self.regeneration_rate)
+            self.population, self.objectives = fo.nsgaii_algorithm(self.objective_function, self.model_sim, self.Obs_splited, self.initialize_population, self.num_generations, self.population_size, self.cross_prob, self.mutation_rate, self.regeneration_rate)
         elif self.cal_alg == 'NSGAII-ts':
-            self.population, self.objectives = fo.nsgaii_algorithm_ts(self.objective_function, self.model_simulation, self.Obs_splited, self.initialize_population, self.num_generations, self.population_size, self.pressure, self.regeneration_rate)
+            self.population, self.objectives = fo.nsgaii_algorithm_ts(self.objective_function, self.model_sim, self.Obs_splited, self.initialize_population, self.num_generations, self.population_size, self.pressure, self.regeneration_rate)
         elif self.cal_alg == 'SPEA2':
-            self.population, self.objectives = fo.spea2_algorithm(self.objective_function, self.model_simulation, self.Obs_splited, self.initialize_population, self.num_generations, self.population_size, self.pressure, self.regeneration_rate, self.cross_prob, self.mutation_rate, self.mutation_variance)
+            self.population, self.objectives = fo.spea2_algorithm(self.objective_function, self.model_sim, self.Obs_splited, self.initialize_population, self.num_generations, self.population_size, self.pressure, self.regeneration_rate, self.cross_prob, self.mutation_rate, self.mutation_variance)
         
 
 
