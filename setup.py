@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='IHSetYates09',
-    version='1.1.3',
+    version='1.1.4',
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
@@ -12,7 +12,7 @@ setup(
         'datetime',
         'spotpy',
         'IHSetCalibration @ git+https://github.com/IHCantabria/IHSetCalibration.git',
-        'fast_optimization @ git+https://github.com/defreitasL/IHSetCalibration.git'
+        'fast_optimization @ git+https://github.com/defreitasL/fast_optimization.git'
     ],
     author='Lucas de Freitas Pereira',
     author_email='lucas.defreitas@unican.es',
