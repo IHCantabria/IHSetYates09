@@ -4,4 +4,4 @@ numba
 datetime
 spotpy
 IHSetCalibration@ git+https://github.com/IHCantabria/IHSetCalibration.git
-fast_optimization@ git+https://github.com/defreitasL/IHSetCalibration.git
+fast_optimization@ git+https://github.com/defreitasL/fast_optimization.git
