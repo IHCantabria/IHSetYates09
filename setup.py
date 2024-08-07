@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='IHSetYates09',
-    version='1.1.2',
+    version='1.1.3',
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
@@ -11,12 +11,13 @@ setup(
         'numba',
         'datetime',
         'spotpy',
-        'IHSetCalibration @ git+https://github.com/defreitasL/IHSetCalibration.git'
+        'IHSetCalibration @ git+https://github.com/IHCantabria/IHSetCalibration.git',
+        'fast_optimization @ git+https://github.com/defreitasL/IHSetCalibration.git'
     ],
     author='Lucas de Freitas Pereira',
     author_email='lucas.defreitas@unican.es',
     description='IH-SET Yates et al. (2009)',
-    url='https://github.com/defreitasL/IHSetYates09',
+    url='https://github.com/IHCantabria/IHSetYates09',
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
