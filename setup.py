@@ -1,18 +1,10 @@
-from setuptools import setup, find_packages, Extension
-from Cython.Build import cythonize
-import numpy
-
-# Definindo as extensões Cython
-extensions = [
-    Extension("IHSetYates09.fast_simulator", ["IHSetYates09/fast_simulator.pyx"], include_dirs=[numpy.get_include()]),
-]
+from setuptools import setup, find_packages
 
 setup(
     name='IHSetYates09',
-    version='1.1.7',
+    version='1.1.9',
     packages=find_packages(),
     include_package_data=True,
-    ext_modules=cythonize(extensions),  # Adiciona a compilação Cython
     install_requires=[
         'numpy',
         'xarray',
