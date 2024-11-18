@@ -22,7 +22,7 @@ class cal_Yates09_2(object):
      
         data = xr.open_dataset(path)
         
-        cfg = json.loads(data['config_y09'])
+        cfg = json.loads(data['Yates09'])
 
         self.cal_alg = cfg['cal_alg'].values
         self.metrics = cfg['metrics'].values
