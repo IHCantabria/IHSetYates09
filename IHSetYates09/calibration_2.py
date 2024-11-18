@@ -2,8 +2,10 @@ import numpy as np
 import xarray as xr
 from datetime import datetime
 import fast_optimization as fo
+import pandas as pd
 from .yates09 import yates09
 from numba import jit
+import json
 
 class cal_Yates09_2(object):
     """
@@ -17,13 +19,10 @@ class cal_Yates09_2(object):
     def __init__(self, path):
 
         self.path = path
+     
+        data = xr.open_dataset(path)
         
-        
-        mkTime = np.vectorize(lambda Y, M, D, h: datetime(int(Y), int(M), int(D), int(h), 0, 0))
-
-        cfg = xr.open_dataset(path+'config.nc')
-        wav = xr.open_dataset(path+'wav.nc')
-        ens = xr.open_dataset(path+'ens.nc')
+        cfg = json.loads(data['config_y09'])
 
         self.cal_alg = cfg['cal_alg'].values
         self.metrics = cfg['metrics'].values
@@ -38,13 +37,13 @@ class cal_Yates09_2(object):
             self.cross_prob = cfg['cross_prob'].values
             self.mutation_rate = cfg['mutation_rate'].values
             self.regeneration_rate = cfg['regeneration_rate'].values
-            self.objective_function = fo.multi_obj_func(self.metrics)
+            self.indexes = fo.multi_obj_indexes(self.metrics)
         elif self.cal_alg == 'NSGAII-ts': 
             self.num_generations = cfg['num_generations'].values
             self.population_size = cfg['population_size'].values
             self.pressure = cfg['pressure'].values
             self.regeneration_rate = cfg['regeneration_rate'].values
-            self.objective_function = fo.multi_obj_func(self.metrics)
+            self.indexes = fo.multi_obj_indexes(self.metrics)
         elif self.cal_alg == 'SPEA2':
             self.num_generations = cfg['num_generations'].values
             self.population_size = cfg['population_size'].values
@@ -53,26 +52,26 @@ class cal_Yates09_2(object):
             self.cross_prob = cfg['cross_prob'].values
             self.mutation_rate = cfg['mutation_rate'].values
             self.mutation_variance = cfg['mutation_variance'].values
-            self.objective_function = fo.multi_obj_func(self.metrics)
+            self.indexes = fo.multi_obj_indexes(self.metrics)
 
-        self.Hs = wav['Hs'].values
-        self.time = mkTime(wav['Y'].values, wav['M'].values, wav['D'].values, wav['h'].values)
+        self.Hs = data.Hs.values[:, cfg['trs'].values]
+        self.time = data.time.values
         self.E = self.Hs ** 2
 
-        self.Obs = ens['Obs'].values
-        self.time_obs = mkTime(ens['Y'].values, ens['M'].values, ens['D'].values, ens['h'].values)
-
-        self.start_date = datetime(int(cfg['Ysi'].values), int(cfg['Msi'].values), int(cfg['Dsi'].values))
-        self.end_date = datetime(int(cfg['Ysf'].values), int(cfg['Msf'].values), int(cfg['Dsf'].values))
+        self.Obs = data.obs.values[:, cfg['trs'].values]
+        self.Obs = self.Obs[data.mask_nan_obs[:, ~cfg['trs'].values]]
+        self.time_obs = data.time_obs.values
+        self.time_obs = self.time_obs[data.mask_nan_obs[:, ~cfg['trs'].values]]
+        
+        self.start_date = pd.to_datetime(cfg['start_date'])
+        self.end_date = pd.to_datetime(cfg['end_date'])
 
         self.split_data()
 
         if self.switch_Yini == 0:
             self.Yini = self.Obs_splited[0]
 
-        cfg.close()
-        wav.close()
-        ens.close()
+        data.close()
 
         mkIdx = np.vectorize(lambda t: np.argmin(np.abs(self.time - t)))
 
@@ -181,11 +180,41 @@ class cal_Yates09_2(object):
         Calibrate the model.
         """
         if self.cal_alg == 'NSGAII':
-            self.population, self.objectives = fo.nsgaii_algorithm(self.objective_function, self.model_sim, self.Obs_splited, self.initialize_population, self.num_generations, self.population_size, self.cross_prob, self.mutation_rate, self.regeneration_rate)
+            self.population, self.objectives = fo.nsgaii_algorithm(
+                self.objective_function, 
+                self.model_sim, 
+                self.Obs_splited, 
+                self.initialize_population, 
+                self.num_generations, 
+                self.population_size, 
+                self.cross_prob, 
+                self.mutation_rate, 
+                self.regeneration_rate, 
+                self.indexes
+                )
         elif self.cal_alg == 'NSGAII-ts':
-            self.population, self.objectives = fo.nsgaii_algorithm_ts(self.objective_function, self.model_sim, self.Obs_splited, self.initialize_population, self.num_generations, self.population_size, self.pressure, self.regeneration_rate)
+            self.population, self.objectives = fo.nsgaii_algorithm_ts(
+                self.objective_function, self.model_sim, 
+                self.Obs_splited, 
+                self.initialize_population, 
+                self.num_generations, 
+                self.population_size, 
+                self.pressure, 
+                self.regeneration_rate
+                )
         elif self.cal_alg == 'SPEA2':
-            self.population, self.objectives = fo.spea2_algorithm(self.objective_function, self.model_sim, self.Obs_splited, self.initialize_population, self.num_generations, self.population_size, self.pressure, self.regeneration_rate, self.cross_prob, self.mutation_rate, self.mutation_variance)
+            self.population, self.objectives = fo.spea2_algorithm(
+                self.objective_function, 
+                self.model_sim, 
+                self.Obs_splited, 
+                self.initialize_population, 
+                self.num_generations, 
+                self.population_size, 
+                self.pressure, 
+                self.regeneration_rate, 
+                self.cross_prob, 
+                self.mutation_rate, 
+                self.mutation_variance)
         
 
 
