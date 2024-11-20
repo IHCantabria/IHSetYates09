@@ -3,5 +3,6 @@ xarray
 numba
 datetime
 spotpy
+pandas
 IHSetCalibration@ git+https://github.com/IHCantabria/IHSetCalibration.git
 fast_optimization@ git+https://github.com/defreitasL/fast_optimization.git

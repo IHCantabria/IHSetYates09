@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='IHSetYates09',
-    version='1.1.11',
+    version='1.2.0',
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
@@ -11,6 +11,7 @@ setup(
         'numba',
         'datetime',
         'spotpy',
+        'pandas',
         'IHSetCalibration @ git+https://github.com/IHCantabria/IHSetCalibration.git',
         'fast_optimization @ git+https://github.com/defreitasL/fast_optimization.git'
     ],
