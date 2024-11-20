@@ -92,13 +92,14 @@ class cal_Yates09_2(object):
         
         self.start_date = pd.to_datetime(cfg['start_date'])
         self.end_date = pd.to_datetime(cfg['end_date'])
+        
+        data.close()
 
         self.split_data()
 
         if self.switch_Yini == 0:
             self.Yini = self.Obs_splited[0]
 
-        data.close()
 
         mkIdx = np.vectorize(lambda t: np.argmin(np.abs(self.time - t)))
 
