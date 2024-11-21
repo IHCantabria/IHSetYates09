@@ -24,7 +24,6 @@ class cal_Yates09_2(object):
 
         self.cal_alg = cfg['cal_alg']
         self.metrics = cfg['metrics']
-        self.dt = cfg['dt']
         self.switch_Yini = cfg['switch_Yini']
         self.lb = cfg['lb']
         self.ub = cfg['ub']
@@ -106,6 +105,13 @@ class cal_Yates09_2(object):
         
         self.idx_obs = mkIdx(self.time_obs)
 
+        # Now we calculate the dt from the time variable
+        mkDT = np.vectorize(lambda i: (self.time[i+1] - self.time[i]).total_seconds()/3600)
+        self.dt = mkDT(np.arange(0, len(self.time)-1))
+        mkDTsplited = np.vectorize(lambda i: (self.time_splited[i+1] - self.time_splited[i]).total_seconds()/3600)
+        self.dt_splited = mkDTsplited(np.arange(0, len(self.time_splited)-1))
+
+
         if self.switch_Yini == 0:
             # @jit
             def model_simulation(par):
@@ -114,7 +120,7 @@ class cal_Yates09_2(object):
                 cacr = -np.exp(par[2])
                 cero = -np.exp(par[3])
                 Ymd, _ = yates09(self.E_splited,
-                                 self.dt,
+                                 self.dt_splited,
                                  a,
                                  b,
                                  cacr,
@@ -162,7 +168,7 @@ class cal_Yates09_2(object):
                 Yini = par[4]
 
                 Ymd, _ = yates09(self.E_splited,
-                                 self.dt,
+                                 self.dt_splited,
                                  a,
                                  b,
                                  cacr,
