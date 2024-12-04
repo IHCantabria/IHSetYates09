@@ -22,6 +22,8 @@ class Yates09_run(object):
         
         cfg = json.loads(data.attrs['run_Yates09'])
 
+        self.switch_Yini = cfg['switch_Yini']
+
         if cfg['trs'] == 'Average':
             self.hs = np.mean(data.hs.values, axis=1)
             self.time = pd.to_datetime(data.time.values)
@@ -50,6 +52,10 @@ class Yates09_run(object):
 
         self.split_data()
 
+        if self.switch_Yini == 1:
+            ii = np.argmin(np.abs(self.time_obs - self.time[0]))
+            self.Yini = self.Obs[ii]
+
         mkIdx = np.vectorize(lambda t: np.argmin(np.abs(self.time - t)))
         
         self.idx_obs = mkIdx(self.time_obs)
@@ -58,7 +64,7 @@ class Yates09_run(object):
         mkDT = np.vectorize(lambda i: (self.time[i+1] - self.time[i]).total_seconds()/3600)
         self.dt = mkDT(np.arange(0, len(self.time)-1))
 
-        if cfg['switch_Yini'] == 0:
+        if self.switch_Yini == 0:
             def run_model(par):
                 a = par[0]
                 b = par[1]
@@ -110,6 +116,10 @@ class Yates09_run(object):
         ii = np.where((self.time >= self.start_date) & (self.time <= self.end_date))[0]
         self.E = self.E[ii]
         self.time = self.time[ii]
+
+        ii = np.where((self.time_obs >= self.start_date) & (self.time_obs <= self.end_date))[0]
+        self.Obs = self.Obs[ii]
+        self.time_obs = self.time_obs[ii]
 
 
 
