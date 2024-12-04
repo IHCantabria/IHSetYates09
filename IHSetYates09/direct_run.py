@@ -42,9 +42,13 @@ class Yates09_run(object):
         if cfg['switch_Yini'] == 1:
             ii = np.argmin(np.abs(self.time_obs - self.time[0]))
             self.Yini = self.Obs[ii]
+
+        self.start_date = pd.to_datetime(cfg['start_date'])
+        self.end_date = pd.to_datetime(cfg['end_date'])
         
         data.close()
 
+        self.split_data()
 
         mkIdx = np.vectorize(lambda t: np.argmin(np.abs(self.time - t)))
         
@@ -98,6 +102,14 @@ class Yates09_run(object):
         self.metrics_names = fo.backtot()[0]
         self.indexes = fo.multi_obj_indexes(self.metrics_names)
         self.metrics = fo.multi_obj_func(self.Obs, self.full_run[self.idx_obs], self.indexes)
+
+    def split_data(self):
+        """
+        Split the data into calibration and validation datasets.
+        """
+        ii = np.where((self.time >= self.start_date) & (self.time <= self.end_date))[0]
+        self.E = self.E[ii]
+        self.time = self.time[ii]
 
 
 
