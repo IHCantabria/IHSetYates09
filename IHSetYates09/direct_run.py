@@ -41,9 +41,6 @@ class Yates09_run(object):
             self.time_obs = pd.to_datetime(data.time_obs.values)
             self.time_obs = self.time_obs[~data.mask_nan_obs[:, cfg['trs']]]
 
-        if cfg['switch_Yini'] == 1:
-            ii = np.argmin(np.abs(self.time_obs - self.time[0]))
-            self.Yini = self.Obs[ii]
 
         self.start_date = pd.to_datetime(cfg['start_date'])
         self.end_date = pd.to_datetime(cfg['end_date'])

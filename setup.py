@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='IHSetYates09',
-    version='1.3.4',
+    version='1.3.5',
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
