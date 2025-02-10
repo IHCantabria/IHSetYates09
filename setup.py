@@ -2,17 +2,14 @@ from setuptools import setup, find_packages
 
 setup(
     name='IHSetYates09',
-    version='1.3.5',
+    version='1.3.6',
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
         'numpy',
         'xarray',
         'numba',
-        'datetime',
-        'spotpy',
         'pandas',
-        'IHSetCalibration @ git+https://github.com/IHCantabria/IHSetCalibration.git',
         'fast_optimization @ git+https://github.com/defreitasL/fast_optimization.git'
     ],
     author='Lucas de Freitas Pereira',
