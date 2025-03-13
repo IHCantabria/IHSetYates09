@@ -18,6 +18,8 @@ class cal_Yates09_2(object):
 
         self.path = path
         self.name = 'Yates et al. (2009)'
+        self.mode = 'calibration'
+        self.type = 'CS'
 
         data = xr.open_dataset(path)
         

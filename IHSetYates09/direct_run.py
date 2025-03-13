@@ -18,6 +18,8 @@ class Yates09_run(object):
 
         self.path = path
         self.name = 'Yates et al. (2009)'
+        self.mode = 'standalone'
+        self.type = 'CS'
      
         data = xr.open_dataset(path)
         
