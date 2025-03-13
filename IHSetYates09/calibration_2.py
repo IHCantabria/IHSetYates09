@@ -17,7 +17,8 @@ class cal_Yates09_2(object):
     def __init__(self, path):
 
         self.path = path
-     
+        self.name = 'Yates et al. (2009)'
+
         data = xr.open_dataset(path)
         
         cfg = json.loads(data.attrs['Yates09'])
@@ -74,7 +75,7 @@ class cal_Yates09_2(object):
             # @jit
             def model_simulation(par):
                 a = -np.exp(par[0])
-                b = np.exp(par[1])
+                b = par[1]
                 cacr = -np.exp(par[2])
                 cero = -np.exp(par[3])
                 Ymd, _ = yates09(self.E_splited,
@@ -90,7 +91,7 @@ class cal_Yates09_2(object):
 
             def run_model(par):
                 a = -np.exp(par[0])
-                b = np.exp(par[1])
+                b = par[1]
                 cacr = -np.exp(par[2])
                 cero = -np.exp(par[3])
                 Ymd, _ = yates09(self.E,
@@ -106,8 +107,8 @@ class cal_Yates09_2(object):
 
             # @jit
             def init_par(population_size):
-                log_lower_bounds = np.array([np.log(self.lb[0]), np.log(self.lb[1]), np.log(self.lb[2]), np.log(self.lb[3])])
-                log_upper_bounds = np.array([np.log(self.ub[0]), np.log(self.ub[1]), np.log(self.ub[2]), np.log(self.ub[3])])
+                log_lower_bounds = np.array([np.log(self.lb[0]), self.lb[1], np.log(self.lb[2]), np.log(self.lb[3])])
+                log_upper_bounds = np.array([np.log(self.ub[0]), self.ub[1], np.log(self.ub[2]), np.log(self.ub[3])])
                 population = np.zeros((population_size, 4))
                 for i in range(4):
                     population[:,i] = np.random.uniform(log_lower_bounds[i], log_upper_bounds[i], population_size)
@@ -120,7 +121,7 @@ class cal_Yates09_2(object):
             # @jit
             def model_simulation(par):
                 a = -np.exp(par[0])
-                b = np.exp(par[1])
+                b = par[1]
                 cacr = -np.exp(par[2])
                 cero = -np.exp(par[3])
                 Yini = par[4]
@@ -138,7 +139,7 @@ class cal_Yates09_2(object):
 
             def run_model(par):
                 a = -np.exp(par[0])
-                b = np.exp(par[1])
+                b = par[1]
                 cacr = -np.exp(par[2])
                 cero = -np.exp(par[3])
                 Yini = par[4]
@@ -157,8 +158,8 @@ class cal_Yates09_2(object):
 
             # @jit
             def init_par(population_size):
-                log_lower_bounds = np.array([np.log(self.lb[0]), np.log(self.lb[1]), np.log(self.lb[2]), np.log(self.lb[3]), 0.75*np.min(self.Obs_splited)])
-                log_upper_bounds = np.array([np.log(self.ub[0]), np.log(self.ub[1]), np.log(self.ub[2]), np.log(self.ub[3]), 1.25*np.max(self.Obs_splited)])
+                log_lower_bounds = np.array([np.log(self.lb[0]), self.lb[1], np.log(self.lb[2]), np.log(self.lb[3]), 0.75*np.min(self.Obs_splited)])
+                log_upper_bounds = np.array([np.log(self.ub[0]), self.ub[1], np.log(self.ub[2]), np.log(self.ub[3]), 1.25*np.max(self.Obs_splited)])
                 population = np.zeros((population_size, 5))
                 for i in range(5):
                     population[:,i] = np.random.uniform(log_lower_bounds[i], log_upper_bounds[i], population_size)
@@ -208,3 +209,16 @@ class cal_Yates09_2(object):
         Calibrate the model.
         """
         self.solution, self.objectives, self.hist = self.calibr_cfg.calibrate(self)
+
+        if self.switch_Yini == 1:
+            self.par_names = [rf'$a$', rf'$b$', rf'$C^+$', rf'$C^-$', rf'$Y_i$']
+            self.par_values = self.solution
+            self.par_values[0] = -np.exp(self.par_values[0])
+            self.par_values[2] = -np.exp(self.par_values[2])
+            self.par_values[3] = -np.exp(self.par_values[3])
+        elif self.switch_Yini == 0:
+            self.par_names = [rf'$a$', rf'$b$', rf'$C^+$', rf'$C^-$']
+            self.par_values = self.solution
+            self.par_values[0] = -np.exp(self.par_values[0])
+            self.par_values[2] = -np.exp(self.par_values[2])
+            self.par_values[3] = -np.exp(self.par_values[3])
