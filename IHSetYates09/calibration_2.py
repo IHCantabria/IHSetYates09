@@ -210,6 +210,8 @@ class cal_Yates09_2(object):
         """
         self.solution, self.objectives, self.hist = self.calibr_cfg.calibrate(self)
 
+        self.full_run = self.run_model(self.solution)
+
         if self.switch_Yini == 1:
             self.par_names = [r'$a$', r'$b$', r'$C^+$', r'$C^-$', r'$Y_i$']
             self.par_values = self.solution.copy()
