@@ -216,13 +216,13 @@ class cal_Yates09_2(object):
         self.full_run = self.run_model(self.solution)
 
         if self.switch_Yini == 1:
-            self.par_names = [r'$a$', r'$b$', r'$C^+$', r'$C^-$', r'$Y_i$']
+            self.par_names = [r'a', r'b', r'C+', r'C-', r'Y_i']
             self.par_values = self.solution.copy()
             self.par_values[0] = -np.exp(self.par_values[0])
             self.par_values[2] = -np.exp(self.par_values[2])
             self.par_values[3] = -np.exp(self.par_values[3])
         elif self.switch_Yini == 0:
-            self.par_names = [r'$a$', r'$b$', r'$C^+$', r'$C^-$']
+            self.par_names = [r'a', r'b', r'C+', r'C-']
             self.par_values = self.solution.copy()
             self.par_values[0] = -np.exp(self.par_values[0])
             self.par_values[2] = -np.exp(self.par_values[2])
