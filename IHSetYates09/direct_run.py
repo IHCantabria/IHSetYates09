@@ -24,6 +24,7 @@ class Yates09_run(object):
         data = xr.open_dataset(path)
         
         cfg = json.loads(data.attrs['run_Yates09'])
+        self.cfg = cfg
 
         self.switch_Yini = cfg['switch_Yini']
 
