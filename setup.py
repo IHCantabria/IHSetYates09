@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='IHSetYates09',
-    version='1.4.5',
+    version='1.4.6',
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
@@ -10,6 +10,7 @@ setup(
         'xarray',
         'numba',
         'pandas',
+        'math',
         'fast_optimization @ git+https://github.com/defreitasL/fast_optimization.git'
     ],
     author='Lucas de Freitas Pereira',

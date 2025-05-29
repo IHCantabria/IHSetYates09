@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: IHSetYates09
-Version: 1.4.5
+Version: 1.4.6
 Summary: IH-SET Yates et al. (2009)
 Home-page: https://github.com/IHCantabria/IHSetYates09
 Author: Lucas de Freitas Pereira
@@ -18,4 +18,5 @@ Requires-Dist: numpy
 Requires-Dist: xarray
 Requires-Dist: numba
 Requires-Dist: pandas
+Requires-Dist: math
 Requires-Dist: fast_optimization@ git+https://github.com/defreitasL/fast_optimization.git
