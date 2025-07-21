@@ -3,6 +3,7 @@ README.md
 setup.py
 IHSetYates09/__init__.py
 IHSetYates09/calibration_2.py
+IHSetYates09/calibration_3.py
 IHSetYates09/direct_run.py
 IHSetYates09/yates09.py
 IHSetYates09.egg-info/PKG-INFO
