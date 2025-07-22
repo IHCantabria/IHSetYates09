@@ -2,7 +2,7 @@ import numpy as np
 from .yates09 import yates09
 from IHSetUtils.CoastlineModel import CoastlineModel
 
-class cal_Yates09_3(CoastlineModel):
+class cal_Yates09_2(CoastlineModel):
     """
     Shoreline model Yates et al. (2009).
     """
