@@ -148,7 +148,7 @@ class Yates09_run(CoastlineModel):
             model_name='Yates et al. (2009)',
             mode='standalone',
             model_type='CS',
-            model_key='Yates09'
+            model_key='run_Yates09'
         )
         self.switch_Yini = self.cfg['switch_Yini']
         self.setup_forcing()
