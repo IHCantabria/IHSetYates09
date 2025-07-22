@@ -18,7 +18,7 @@ import math
 
 #     return Y, Seq
 
-@njit(nopython=True, fastmath=True, cache=True)
+@njit(fastmath=True, cache=True)
 def yates09(E, dt, a, b, cacr, cero, Yini):
     n = E.shape[0]
     # Precomputados

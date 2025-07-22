@@ -156,7 +156,7 @@ class Yates09_run(CoastlineModel):
     def setup_forcing(self):
         self.E = self.hs ** 2
         if self.switch_Yini == 1:
-            self.Yini = self.Obs_splited[0]
+            self.Yini = self.Obs[0]
 
     def run_model(self, par: np.ndarray) -> np.ndarray:
         if self.switch_Yini == 1:
