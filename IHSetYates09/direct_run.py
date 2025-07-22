@@ -130,7 +130,7 @@
 #         self.time_obs = self.time_obs[ii]
 
 import numpy as np
-from .yates09 import yates09
+from .yates09 import yates09_njit 
 from IHSetUtils.CoastlineModel import CoastlineModel
 
 class Yates09_run(CoastlineModel):
@@ -162,11 +162,11 @@ class Yates09_run(CoastlineModel):
         if self.switch_Yini == 1:
             a = par[0]; b = par[1]
             cacr = par[2]; cero = par[3]
-            Ymd, _ = yates09(self.E, self.dt, a, b, cacr, cero, self.Yini)
+            Ymd, _ = yates09_njit(self.E, self.dt, a, b, cacr, cero, self.Yini)
         else:
             a = par[0]; b = par[1]
             cacr = par[2]; cero = par[3]; Yini = par[4]
-            Ymd, _ = yates09(self.E, self.dt, a, b, cacr, cero, Yini)
+            Ymd, _ = yates09_njit(self.E, self.dt, a, b, cacr, cero, Yini)
         return Ymd
     
     def _set_parameter_names(self):
