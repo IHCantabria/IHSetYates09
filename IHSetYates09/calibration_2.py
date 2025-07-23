@@ -14,10 +14,10 @@ class cal_Yates09_2(CoastlineModel):
             model_type='CS',
             model_key='Yates09'
         )
-        self.switch_Yini = self.cfg['switch_Yini']
         self.setup_forcing()
 
     def setup_forcing(self):
+        self.switch_Yini = self.cfg['switch_Yini']
         self.E = self.hs ** 2
         self.E_s = self.hs_s ** 2
         if self.switch_Yini == 0:
@@ -42,25 +42,23 @@ class cal_Yates09_2(CoastlineModel):
         return pop, lowers, uppers
 
     def model_sim(self, par: np.ndarray) -> np.ndarray:
+        a = -np.exp(par[0]); b = par[1]
+        cacr = -np.exp(par[2]); cero = -np.exp(par[3])
         if self.switch_Yini == 0:
-            a = -np.exp(par[0]); b = par[1]
-            cacr = -np.exp(par[2]); cero = -np.exp(par[3])
-            Ymd, _ = yates09(self.E_s, self.dt_s, a, b, cacr, cero, self.Yini)
+            Yini = self.Yini
         else:
-            a = -np.exp(par[0]); b = par[1]
-            cacr = -np.exp(par[2]); cero = -np.exp(par[3]); Yini = par[4]
-            Ymd, _ = yates09(self.E_s, self.dt_s, a, b, cacr, cero, Yini)
+            Yini = par[4]
+        Ymd, _ = yates09(self.E_s, self.dt_s, a, b, cacr, cero, Yini)
         return Ymd[self.idx_obs_splited]
 
     def run_model(self, par: np.ndarray) -> np.ndarray:
+        a = par[0]; b = par[1]
+        cacr = par[2]; cero = par[3]
         if self.switch_Yini == 0:
-            a = par[0]; b = par[1]
-            cacr = par[2]; cero = par[3]
-            Ymd, _ = yates09(self.E, self.dt, a, b, cacr, cero, self.Yini)
+            Yini = self.Yini
         else:
-            a = par[0]; b = par[1]
-            cacr = par[2]; cero = par[3]; Yini = par[4]
-            Ymd, _ = yates09(self.E, self.dt, a, b, cacr, cero, Yini)
+            Yini = par[4]
+        Ymd, _ = yates09(self.E, self.dt, a, b, cacr, cero, Yini)
         return Ymd
 
     def _set_parameter_names(self):

@@ -159,14 +159,13 @@ class Yates09_run(CoastlineModel):
             self.Yini = self.Obs[0]
 
     def run_model(self, par: np.ndarray) -> np.ndarray:
+        a = par[0]; b = par[1]
+        cacr = par[2]; cero = par[3]
         if self.switch_Yini == 1:
-            a = par[0]; b = par[1]
-            cacr = par[2]; cero = par[3]
-            Ymd, _ = yates09_njit(self.E, self.dt, a, b, cacr, cero, self.Yini)
+            Yini = self.Yini       
         else:
-            a = par[0]; b = par[1]
-            cacr = par[2]; cero = par[3]; Yini = par[4]
-            Ymd, _ = yates09_njit(self.E, self.dt, a, b, cacr, cero, Yini)
+            Yini = par[4]
+        Ymd, _ = yates09_njit(self.E, self.dt, a, b, cacr, cero, Yini)
         return Ymd
     
     def _set_parameter_names(self):
