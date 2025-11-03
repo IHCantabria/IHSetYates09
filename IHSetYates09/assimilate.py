@@ -1,6 +1,7 @@
 import numpy as np
 from .yates09 import yates09
 from IHSetUtils.CoastlineModel import CoastlineModel
+from typing import Any
 
 class assimilate_Yates09(CoastlineModel):
     """
@@ -20,7 +21,6 @@ class assimilate_Yates09(CoastlineModel):
         self.E = self.hs ** 2
         self.E_s = self.hs_s ** 2
         self.Yini = self.Obs_splited[0]
-        self.y_old = self.Yini
 
     def init_par(self, population_size: int):
         lowers = np.array([np.log(self.lb[0]), self.lb[1], np.log(self.lb[2]), np.log(self.lb[3])])
@@ -31,13 +31,49 @@ class assimilate_Yates09(CoastlineModel):
             pop[:, i] = np.random.uniform(lowers[i], uppers[i], population_size)
         return pop, lowers, uppers
 
-    def model_step(self, par: np.ndarray, t_idx: int) -> np.ndarray:
+    def model_step(self, par: np.ndarray, t_idx: int, context: Any | None = None) -> np.ndarray:
         a = -np.exp(par[0]); b = par[1]
         cacr = -np.exp(par[2]); cero = -np.exp(par[3])
         idx = self.idx_obs_splited[t_idx-1:t_idx]
-        Ymd, _ = yates09(self.E_s[idx], self.dt_s[idx], a, b, cacr, cero, self.y_old)
-        self.y_old = Ymd[-1]
-        return Ymd[-1]
+        if context is None or ('y_old' not in context):
+            y0 = float(self.Yini)   # first step starts from initial shoreline
+        else:
+            y0 = float(context['y_old'])
+        Ymd, _ = yates09(self.E_s[idx], self.dt_s[idx], a, b, cacr, cero, y0)
+        context = {'y_old': Ymd[-1]}
+        return Ymd[-1], context
+    
+    def model_step_batch(self,
+                        pop: np.ndarray,             # (N, D)
+                        t_idx: int,
+                        contexts: list[dict] | None  # len N
+                        ):
+        N = pop.shape[0]
+        y_out   = np.empty((N,), dtype=float)
+        new_ctx = [None] * N
+
+        i0, i1 = self.idx_obs_splited[t_idx-1], self.idx_obs_splited[t_idx]
+        E_seg  = self.E_s[i0:i1]
+        dt_seg = self.dt_s[i0:i1]
+
+        for j in range(N):
+            par = pop[j]
+            a    = -np.exp(par[0])
+            b    =  par[1]
+            cacr = -np.exp(par[2])
+            cero = -np.exp(par[3])
+
+            y0 = float(self.Yini) if (contexts is None or contexts[j] is None
+                                    or 'y_old' not in contexts[j]) else float(contexts[j]['y_old'])
+
+            Ymd, _ = yates09(E_seg, dt_seg, a, b, cacr, cero, y0)
+            y_last = float(Ymd[-1])
+
+            y_out[j]   = y_last
+            new_ctx[j] = {'y_old': y_last}
+
+        # EnKF expects (N, p). For scalar p=1, return shape (N, 1) or (N,) is okay
+        return y_out, new_ctx
 
     def run_model(self, par: np.ndarray) -> np.ndarray:
         a = par[0]; b = par[1]
