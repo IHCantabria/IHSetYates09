@@ -10,7 +10,7 @@ class assimilate_Yates09(CoastlineModel):
         super().__init__(
             path=path,
             model_name='Yates et al. (2009)',
-            mode='calibration',
+            mode='assimilation',
             model_type='CS',
             model_key='Yates09'
         )
