@@ -2,6 +2,7 @@ LICENSE
 README.md
 setup.py
 IHSetYates09/__init__.py
+IHSetYates09/assimilate.py
 IHSetYates09/calibration_2.py
 IHSetYates09/calibration_3.py
 IHSetYates09/direct_run.py
