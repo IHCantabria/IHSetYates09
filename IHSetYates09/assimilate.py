@@ -34,12 +34,12 @@ class assimilate_Yates09(CoastlineModel):
     def model_step(self, par: np.ndarray, t_idx: int, context: Any | None = None) -> np.ndarray:
         a = -np.exp(par[0]); b = par[1]
         cacr = -np.exp(par[2]); cero = -np.exp(par[3])
-        idx = self.idx_obs_splited[t_idx-1:t_idx]
+        i0, i1 = self.idx_obs_splited[t_idx-1], self.idx_obs_splited[t_idx]
         if context is None or ('y_old' not in context):
             y0 = float(self.Yini)   # first step starts from initial shoreline
         else:
             y0 = float(context['y_old'])
-        Ymd, _ = yates09(self.E_s[idx], self.dt_s[idx], a, b, cacr, cero, y0)
+        Ymd, _ = yates09(self.E_s[i0:i1], self.dt_s[i0:i1], a, b, cacr, cero, y0)
         context = {'y_old': Ymd[-1]}
         return Ymd[-1], context
     
